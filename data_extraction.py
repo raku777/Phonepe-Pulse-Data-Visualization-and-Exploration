@@ -2,8 +2,11 @@ import pandas as pd
 import json
 import os
 import git
-
-git.Repo.clone_from("https://github.com/PhonePe/pulse.git", 'pulse')
+def clone_repo():
+    try:
+        git.Repo.clone_from('https://github.com/PhonePe/pulse.git', 'pulse')
+    except:
+        print('Error occured while cloning repository')
 
 #Aggregate Transaction
 def aggregate_transaction():
