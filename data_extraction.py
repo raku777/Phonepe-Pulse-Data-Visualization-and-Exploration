@@ -43,7 +43,7 @@ def aggregate_users():
     path="pulse/data/aggregated/user/country/india/state/"
     Agg_user_state_list=os.listdir(path)
 
-    clm={'State':[], 'Year':[],'Quarter':[],'User_Brand':[], 'User_Count':[], 'User_Percentage':[]}
+    clm={'State':[], 'Year':[],'Quarter':[],'Registered_Users':[], 'App_Opens':[]}
     for i in Agg_user_state_list:
         p_i=path+i+"/"
         Agg_yr=os.listdir(p_i)
@@ -54,19 +54,13 @@ def aggregate_users():
                 p_k=p_j+k
                 Data=open(p_k,'r')
                 D=json.load(Data)
-                try:
-                    for z in D['data']['usersByDevice']:
-                        count=z['count']
-                        brand=z['brand']
-                        percentage=z['percentage']
-                        clm['User_Count'].append(count)
-                        clm['User_Brand'].append(brand)
-                        clm['User_Percentage'].append(percentage)
-                        clm['State'].append(i)
-                        clm['Year'].append(j)
-                        clm['Quarter'].append(int(k.strip('.json')))
-                except:
-                    pass
+                count=D['data']['aggregated']['registeredUsers']
+                app_opens=D['data']['aggregated']['appOpens']
+                clm['Registered_Users'].append(count)
+                clm['App_Opens'].append(app_opens)
+                clm['State'].append(i)
+                clm['Year'].append(j)
+                clm['Quarter'].append(int(k.strip('.json')))
 
     Agg_Users=pd.DataFrame(clm)
     return Agg_Users
@@ -248,5 +242,6 @@ def top_users_pincode():
 
     Top_Users_by_pincode=pd.DataFrame(clm)
     return Top_Users_by_pincode 
+
 
 
