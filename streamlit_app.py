@@ -22,7 +22,7 @@ def convert_numerical_dt(df,column_names):
 
 # Function to fetch data from MySQL
 def fetch_data(query,year,quarter):
-    my_db = sql.connect(host='localhost', user='root', password='raku#123', database='phonepe_pulse')
+    my_db = sql.connect(host='localhost', user='your_username', password='your_password', database='your_database')
     cursor = my_db.cursor()
     cursor.execute(query,(year,quarter))
     column_names = [i[0] for i in cursor.description]
@@ -179,22 +179,4 @@ elif options == "Aggregate Users":
                       group by year,quarter,pincode order by sum(registered_users) desc limit 10"""
             df4=fetch_data(query4,year,quarter)
             st.dataframe(df4,hide_index=1)
-            
-
-                    
-
-                        
-            
-        
-
-
-# elif options == "Map Transaction":
-#     st.header("Map Transaction Data")
-#     query = "SELECT * FROM map_transaction"
-#     df = fetch_data(query)
-#     st.dataframe(df)
-
-    # Add your Plotly chart here using df
-
-# Repeat the above structure for other options
 
