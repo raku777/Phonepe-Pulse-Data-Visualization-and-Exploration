@@ -2,7 +2,7 @@ import mysql.connector as sql
 from data_extraction import *
 
 def sql_database_table_creation():
-    my_db = sql.connect(host= 'localhost', user='root', password = 'raku#123')
+    my_db = sql.connect(host= 'localhost', user='your_username', password = 'your_password')
     db_name = 'phonepe_pulse' 
     cursor = my_db.cursor()
     cursor.execute('create database if not exists %s' %db_name)
@@ -69,7 +69,7 @@ def sql_database_table_creation():
     my_db.close()
 
 def data_insertion():
-    my_db = sql.connect(host= 'localhost', user='root', password = 'raku#123',database = 'phonepe_pulse')
+    my_db = sql.connect(host= 'localhost', user='your_username', password = 'your_password',database = 'phonepe_pulse')
     cursor = my_db.cursor()
     cursor.executemany('insert into aggregate_transaction(\
                        state, year, quarter, transaction_type, transaction_count, transaction_amount)\
