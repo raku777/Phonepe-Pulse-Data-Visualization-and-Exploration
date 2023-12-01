@@ -320,7 +320,25 @@ if SELECT== 'Insights':
         df=fetch_data_by_state(query,state,year,quarter)
         fig=px.bar(df,x='Transaction Type',y='Transaction Count',color='Transaction Count',color_continuous_scale='ylorrd')
         st.plotly_chart(fig,use_container_width=True)
-
+    
+    elif options=='Top 10 Districts by Registered Users of each State':
+        col1,col2,col3= st.columns([0.3,0.3,0.3])
+        with col1:
+            state=st.selectbox('Select a State or Union Territory',['andaman-&-nicobar-islands','andhra-pradesh','arunachal-pradesh','assam',
+                                'bihar','chandigarh','chhattisgarh','dadra-&-nagar-haveli-&-daman-&-diu','delhi','goa','gujarat','haryana',
+                                'himachal-pradesh','jammu-&-kashmir','jharkhand','karnataka','kerala','ladakh','lakshadweep','madhya-pradesh',
+                                'maharashtra','manipur','meghalaya','mizoram','nagaland','odisha','puducherry','punjab','rajasthan','sikkim',
+                                'tamil-nadu','telangana','tripura','uttar-pradesh','uttarakhand','west-bengal'])
+        with col2:
+            year=st.selectbox('Select a Year',[2018,2019,2020,2021,2022,2023])
+        with col3:
+            quarter=st.selectbox('Select a Quarter',[1,2,3,4])
+        query="""select state,district as 'District',`year`,`quarter`,registered_users as 'Registered Users'
+          from top_users_district where state=%s and year=%s and quarter=%s order by registered_users """
+        df=fetch_data_by_state(query,state,year,quarter)
+        fig=px.bar(df,x='District',y='Registered Users',color='Registered Users',color_continuous_scale='ylorrd')
+        st.plotly_chart(fig,use_container_width=True)        
+    
     elif options=='Top 10 Pincodes by Registered Users of each State':
         col1,col2,col3= st.columns([0.3,0.3,0.3])
         with col1:
