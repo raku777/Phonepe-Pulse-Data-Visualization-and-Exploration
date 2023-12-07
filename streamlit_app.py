@@ -95,7 +95,9 @@ def geo_map(data,color_column,user_input,title):
         fig.update_geos(fitbounds='locations', visible=False)
         st.plotly_chart(fig, use_container_width=True)
 
+
 st.set_page_config(layout="wide")
+st.title('PhonePe Pulse Dashboard')
 SELECT = option_menu(
     menu_title = None,
     options = ["Explore Data","Insights"],
@@ -113,8 +115,6 @@ if SELECT=='Explore Data':
     options = st.sidebar.selectbox('Choose an option', ['Aggregate Transaction', 'Aggregate Users'])
     year = st.sidebar.slider('Choose a year',2018,2023)
     quarter = st.sidebar.slider('Choose a quarter',1,4)
-    # Main content area
-    st.title('PhonePe Pulse Dashboard')
 
     # Display data based on user selection
     if options == 'Aggregate Transaction':
