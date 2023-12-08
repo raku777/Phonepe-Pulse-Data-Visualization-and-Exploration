@@ -76,13 +76,14 @@ class AddUnit:
         elif len(num) >= 13:
             return AddUnit.trillions(num)
 
-def geo_map(data,color_column,user_input,title):
+def geo_map(data,color_column,user_inputs,title):
+        hover_data = ['state', color_column] + user_inputs
         fig = px.choropleth_mapbox(data,
                             geojson='https://gist.githubusercontent.com/jbrobst/56c13bbbf9d97d187fea01ca62ea5112/raw/e388c4cae20aa53cb5090210a42ebb9b765c0a36/india_states.geojson',  
                             featureidkey='properties.ST_NM',  
                             locations='state',
                             color=color_column,
-                            hover_data= ['state',color_column,user_input],
+                            hover_data= hover_data,
                             color_continuous_scale='Viridis',
                             mapbox_style="carto-positron",
                             center={"lat": 20.5937, "lon": 78.9629},
@@ -119,21 +120,21 @@ if SELECT=='Explore Data':
     # Display data based on user selection
     if options == 'Aggregate Transaction':
         st.header('Aggregate Transaction Data')
-        query = """select state, `year`,`quarter`,sum(transaction_amount) as transaction_amount ,sum(transaction_count) as transaction_count from aggregate_transaction
-            where year = %s and quarter = %s group by year, quarter, state order by state asc"""
+        query = """select state, `year`,`quarter`,sum(transaction_amount) as 'Transaction Amount' ,sum(transaction_count) as 'Transaction Count',sum(transaction_amount)/sum(transaction_count) as 'Avg Transaction Value'
+          from aggregate_transaction where year = %s and quarter = %s group by year, quarter, state order by state asc"""
         df = fetch_data(query,year,quarter)
         
         state_name = change_state_name()
         for i in range(len(df.loc[:,'state'])):
             df['state'][i] = state_name[i]
-        # df = convert_numerical_dt(df,'transaction_count')
-        df['transaction_count']= df['transaction_count'].apply(lambda x: AddUnit.unit(x))
+        df['Transaction Count']= df['Transaction Count'].apply(lambda x: AddUnit.unit(x))
+        df['Avg Transaction Value']= df['Avg Transaction Value'].apply(lambda x:round(x))
         if len(df.index)==0:
             st.write("Data not available for the selected quarter or year")
         else:
             col1, col2 = st.columns([0.6, 0.4])
             with col1:
-                geo_map(df,'transaction_amount','transaction_count','Aggregate Transaction Amount on India Map')
+                geo_map(df,'Transaction Amount',['Transaction Count','Avg Transaction Value'],'Aggregate Transaction Amount on India Map')
             with col2:
                 st.title(' Transaction ')
                 query1 = """select sum(transaction_count) as 'All PhonePe Transaction',sum(transaction_amount) as 'Total Payment Value',
@@ -174,7 +175,7 @@ if SELECT=='Explore Data':
         else:
             col1, col2 = st.columns([0.6, 0.4])
             with col1:
-                geo_map(df,'Registered Users','App Opens','Aggregate Users Count on India Map')
+                geo_map(df,'Registered Users',['App Opens'],'Aggregate Users Count on India Map')
             with col2:
                 st.title(' Users ')
                 query1="""select sum(registered_users) as 'Registered Users',sum(app_opens) as 'App Opens'
